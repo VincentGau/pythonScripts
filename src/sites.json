@@ -1,0 +1,10 @@
+{
+  "sites": [
+    {"url": "https://chat.kohaku.cc", "keywords": [], "bad_words":[]},
+    {"url": "https://kohaku.cc", "keywords": [], "bad_words":[]},
+    {"url": "https://blog.kohaku.cc", "keywords": [], "bad_words":[]},
+    {"url": "https://old.kohaku.cc", "keywords": [], "bad_words":[]},
+    {"url": "https://blog.kohaku.cc/2018/04/16/pythonic-code/", "keywords": [], "bad_words":["白名单拒绝"]}
+
+  ]
+}
