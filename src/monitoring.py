@@ -35,17 +35,17 @@ def check_site(site):
         unexpected_words = [k for k in bad_words if k in r.text]
 
         if absent_words or unexpected_words:
-            print(f'{url} failed.')
-            print(
-                f'--should not be there and it appears: {unexpected_words}\n\
-                --should be there and not exist: {absent_words}')
+            # print(f'{url} failed.')
+            # print(
+            #     f'--should not be there and it appears: {unexpected_words}\n\
+            #     --should be there and not exist: {absent_words}')
             return False
 
     except requests.exceptions.ConnectionError as e:
-        print(f'{url} failed. \n--{e}')
+        # print(f'{url} failed. \n--{e}')
         return False
 
-    print(f'{url} passed.')
+    # print(f'{url} passed.')
     return True
 
 
@@ -55,7 +55,7 @@ def get_sites():
 
     :return:
     """
-    with open('sites.json', 'rb') as f:
+    with open('../src/sites.json', 'rb') as f:
         data = json.load(f)
 
     return data['sites']
