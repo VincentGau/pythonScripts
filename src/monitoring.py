@@ -55,7 +55,7 @@ def get_sites():
 
     :return:
     """
-    with open('../src/sites.json', 'rb') as f:
+    with open('sites.json', 'rb') as f:
         data = json.load(f)
 
     return data['sites']
