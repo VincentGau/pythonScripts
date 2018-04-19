@@ -3,9 +3,9 @@ from src import monitoring
 
 
 class MonitorTestCase(TestCase):
-    def test_get_sites(self):
-        sites = monitoring.get_sites()
-        self.assertNotEqual(sites, None)
+    # def test_get_sites(self):
+    #     sites = monitoring.get_sites()
+    #     self.assertNotEqual(sites, None)
 
     def test_check_site(self):
         site = {'url': 'https://baidu.com',
