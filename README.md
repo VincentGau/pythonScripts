@@ -2,4 +2,5 @@
 
 [![Build Status](https://www.travis-ci.org/VincentGau/pythonScripts.svg?branch=master)](https://www.travis-ci.org/VincentGau/pythonScripts)
 
-python 3 scripts
+- Monitoring.py
+    - Keep an eye on the kohaku.cc sites. Send email if not accessible or unexpected things happen.
