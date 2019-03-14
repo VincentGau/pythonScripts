@@ -17,7 +17,7 @@ temp_dir = r'C:\Users\%s\Desktop\AssetsTmp' % getpass.getuser()
 # 最终保存图片的地址
 pic_zone = r'C:\Wallpaper'
 # 不保存小于save_size（KB）的图片
-save_size = 400
+save_size = 300
 
 
 def copy_to_temp():
