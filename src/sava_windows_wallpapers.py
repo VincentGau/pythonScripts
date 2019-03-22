@@ -78,6 +78,13 @@ def filter_by_size():
                 shutil.copy(file_path, pic_zone)
 
 
+def create_piczone_if_not_exist():
+    if not os.path.exists(pic_zone):
+        print("not exist")
+        os.mkdir(pic_zone)
+
+
+create_piczone_if_not_exist()
 copy_to_temp()
 rename()
 filter_by_size()
