@@ -4,6 +4,8 @@ from collections import defaultdict
 import requests
 import json
 import pymssql
+import multiprocessing as mp
+import time
 
 url_collections = 'https://9pq709je.engine.lncld.net/1.1/call/getAllCollections'
 url_authors_by_page = 'https://9pq709je.engine.lncld.net/1.1/call/getHotAuthorsIncludeCountByLikers'
@@ -87,25 +89,30 @@ def insert_works():
 
 
 def get_works_by_author_id(objectId):
+    # print(f"Processing {objectId}")
     page_no = 1
     works_info = []
     while True:
         payload = {"authorId": objectId, "page": page_no, "perPage": 1000}
         result_dict = json.loads(requests.post(url=url_works_by_author, data=payload, headers=default_headers).content)
-        works_dict = result_dict['result']
+        try:
+            works_dict = result_dict['result']
+        except Exception as e:
+            print(f"{objectId}-page:{page_no}-{str(e)}")
+            # print(e)
+            break
         if works_dict:
             for work in works_dict:
                 work = defaultdict(lambda: 'DefaultValue', work)
-                works_info.append((work['objectId'], work['workId'], work['Annotation'], work['AnnotationTr'],
-                                  work['Appreciation'], work['AppreciationTr'], work['AuthorObjectId'], work['Content'],
-                                  work['ContentTr'], work['Dynasty'], work['DynastyTr'], work['Foreword'],
-                                  work['ForewordTr'], work['Intro'], work['IntroTr'], work['objectId'], work['Kind'],
-                                  work['KindCN'], work['KindCNTr'], work['Title'], work['TitleTr'], work['Translation'],
-                                  work['TranslationTr'], work['MasterComment'], work['MasterCommentTr']))
+                works_info.append((work['objectId'], work['workId'], work['annotation'], work['annotationTr'],
+                                  work['appreciation'], work['appreciationTr'], work['author']['objectId'], work['content'],
+                                  work['contentTr'], work['dynasty'], work['dynastyTr'], work['foreword'],
+                                  work['forewordTr'], work['intro'], work['introTr'], work['kind'],
+                                  work['kindCN'], work['kindCNTr'], work['title'], work['titleTr'], work['translation'],
+                                  work['translationTr'], work['masterComment'], work['masterCommentTr']))
         else:
             break
         page_no += 1
-    print(len(works_info))
     return works_info
 
 
@@ -155,14 +162,58 @@ def get_all_author_object_id():
     return c.fetchall()
 
 
-# insert_authors()
-# get_data(url_works_by_author, {"authorId": "57b8fb582e958a005fa52193", "page": 2, "perPage": 500}, 'works-500-2.txt')
-# get_works_by_author_id('57b8fb582e958a005fa52193')
-# insert_works()
-payload = {"page": 3, "perPage": 1000}
-result_dict = json.loads(requests.post(url='https://9pq709je.engine.lncld.net/1.1/call/getWorksAllIncludeCount', data=payload, headers=default_headers).content)
-with open('works-3-1000.txt', 'wb') as f:
-    f.write(requests.post(url='https://9pq709je.engine.lncld.net/1.1/call/getWorksAllIncludeCount', data=payload, headers=default_headers).content)
-print(result_dict)
-# works_dict = result_dict['result']['works']
-# print(len(works_dict))
+def get_author_id_from_db():
+    conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
+    c = conn.cursor()
+    c.execute("select ObjectId from Authors")
+    return c.fetchall()
+
+
+def get_10_author_id_from_db():
+    conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
+    c = conn.cursor()
+    c.execute("select top 10 ObjectId from Authors")
+    return c.fetchall()
+
+
+def get_all_works_2():
+    all_works = []
+    for author_id in get_author_id_from_db():
+        all_works += get_works_by_author_id(author_id)
+    return all_works
+
+
+def insert_all_works():
+    conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
+    c = conn.cursor()
+    c.executemany('insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                  get_all_works_2())
+    conn.commit()
+    conn.close()
+
+# insert_all_works()
+
+
+if __name__ == '__main__':
+    start_time = time.time()
+    pool = mp.Pool(mp.cpu_count())
+    result = pool.map(get_works_by_author_id, get_author_id_from_db())
+
+    pool.close()
+    pool.join()
+
+    works = []
+    for i in result:
+        for j in i:
+            works.append(j)
+
+    conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
+    c = conn.cursor()
+    c.executemany(
+        'insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+        works)
+    conn.commit()
+    conn.close()
+
+    end_time = time.time() - start_time
+    print(f"Time took: {end_time}s")
