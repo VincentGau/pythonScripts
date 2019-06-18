@@ -1,4 +1,5 @@
 # encoding:utf-8
+import datetime
 from collections import defaultdict
 
 import requests
@@ -7,6 +8,8 @@ import pymssql
 import psycopg2
 import multiprocessing as mp
 import time
+import local_settings
+
 
 url_collections = 'https://9pq709je.engine.lncld.net/1.1/call/getAllCollections'
 url_authors_by_page = 'https://9pq709je.engine.lncld.net/1.1/call/getHotAuthorsIncludeCountByLikers'
@@ -30,18 +33,11 @@ def get_authors():
     """
     url = 'https://9pq709je.engine.lncld.net/1.1/call/getHotAuthorsIncludeCountByLikers'
 
-    headers = {
-        'X-LC-Id': '9pq709je4y36ubi10xphdpovula77enqrz27idozgry7x644',
-        'X-LC-Prod': '0',
-        'X-LC-Sign': '328b7e24e9d678c600b391b039e7f881,1560524383359',
-        'X-LC-UA': 'LeanCloud-JS-SDK/3.1.1 (Browser)'
-    }
-
     authors_info = []
     page_no = 1
     while True:
         payload = {"page": page_no, "perPage": 1000}
-        result_dict = json.loads(requests.post(url=url, data=payload, headers=headers).content)
+        result_dict = json.loads(requests.post(url=url, data=payload, headers=default_headers).content)
         authors_dict = result_dict['result']['authors']
 
         if authors_dict:
@@ -68,7 +64,7 @@ def get_authors():
 def insert_authors():
     authors_info = get_authors()
     # conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
-    conn = psycopg2.connect(database="postgres", user="postgres", password="kohaku", host="localhost", port="5432")
+    conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost", port="5432")
     c = conn.cursor()
     c.executemany(
         '''insert into Authors (ObjectId, AuthorId, BirthYear, DeathYear, AuthorDesc, AuthorDescTr, Dynasty, DynastyTr, AuthorName, AuthorNameTr, WorksCiCount, WorksShiCount, WorksQuCount, WorksWenCount, WorksFuCount, WorksCount) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''',
@@ -99,7 +95,7 @@ def get_works_by_author_id(objectId):
         result_dict = json.loads(requests.post(url=url_works_by_author, data=payload, headers=default_headers).content)
         try:
             works_dict = result_dict['result']
-        except Exception as e:
+        except KeyError as e:
             print(f"{objectId}-page:{page_no}-{str(e)}")
             # print(e)
             break
@@ -118,43 +114,9 @@ def get_works_by_author_id(objectId):
     return works_info
 
 
-def get_all_works():
-    page_no = 1
-    works_info = []
-    while True:
-        payload = {"page": page_no, "perPage": 1000}
-        result_dict = json.loads(requests.post(url=url_all_works, data=payload, headers=default_headers).content)
-        works_dict = result_dict['result']['works']
-
-        if works_dict:
-            for work in works_dict:
-                work = defaultdict(lambda: 'DefaultValue', work)
-                works_info.append((work['objectId'], work['workId'], work['Annotation'], work['AnnotationTr'],
-                                   work['Appreciation'], work['AppreciationTr'], work['AuthorObjectId'],
-                                   work['Content'],
-                                   work['ContentTr'], work['Dynasty'], work['DynastyTr'], work['Foreword'],
-                                   work['ForewordTr'], work['Intro'], work['IntroTr'], work['objectId'], work['Kind'],
-                                   work['KindCN'], work['KindCNTr'], work['Title'], work['TitleTr'],
-                                   work['Translation'],
-                                   work['TranslationTr'], work['MasterComment'], work['MasterCommentTr']))
-        else:
-            break
-
-        page_no += 1
-        print(page_no, len(works_info))
-    print(len(works_info))
-    return works_info
-
-
 def get_data(url, payload, filename):
-    headers = {
-        'X-LC-Id': '9pq709je4y36ubi10xphdpovula77enqrz27idozgry7x644',
-        'X-LC-Prod': '0',
-        'X-LC-Sign': '328b7e24e9d678c600b391b039e7f881,1560524383359',
-        'X-LC-UA': 'LeanCloud-JS-SDK/3.1.1 (Browser)'
-    }
     with open(filename, 'wb') as f:
-        f.write(requests.post(url=url, data=payload, headers=headers).content)
+        f.write(requests.post(url=url, data=payload, headers=default_headers).content)
 
 
 def get_all_author_object_id():
@@ -166,20 +128,13 @@ def get_all_author_object_id():
 
 def get_author_id_from_db():
     # conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
-    conn = psycopg2.connect(database="postgres", user="postgres", password="kohaku", host="localhost", port="5432")
+    conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost", port="5432")
     c = conn.cursor()
     c.execute("select ObjectId from Authors")
     return c.fetchall()
 
 
-def get_10_author_id_from_db():
-    conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
-    c = conn.cursor()
-    c.execute("select top 10 ObjectId from Authors")
-    return c.fetchall()
-
-
-def get_all_works_2():
+def get_all_works():
     all_works = []
     for author_id in get_author_id_from_db():
         all_works += get_works_by_author_id(author_id)
@@ -190,14 +145,13 @@ def insert_all_works():
     conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
     c = conn.cursor()
     c.executemany('insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                  get_all_works_2())
+                  get_all_works())
     conn.commit()
     conn.close()
 
-# insert_all_works()
-
 
 if __name__ == '__main__':
+    print(datetime.datetime.now())
     start_time = time.time()
     pool = mp.Pool(8)
     result = pool.map(get_works_by_author_id, get_author_id_from_db())
@@ -211,7 +165,7 @@ if __name__ == '__main__':
             works.append(j)
 
     # conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
-    conn = psycopg2.connect(database="postgres", user="postgres", password="kohaku", host="localhost", port="5432")
+    conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost", port="5432")
     c = conn.cursor()
     c.executemany(
         'insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
@@ -220,8 +174,6 @@ if __name__ == '__main__':
     conn.close()
 
     end_time = time.time() - start_time
+    print(datetime.datetime.now())
     print(f"Time took: {end_time}s")
 
-
-
-# insert_authors()
