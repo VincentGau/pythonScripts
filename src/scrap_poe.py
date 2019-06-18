@@ -4,6 +4,7 @@ from collections import defaultdict
 import requests
 import json
 import pymssql
+import psycopg2
 import multiprocessing as mp
 import time
 
@@ -66,7 +67,8 @@ def get_authors():
 
 def insert_authors():
     authors_info = get_authors()
-    conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
+    # conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
+    conn = psycopg2.connect(database="postgres", user="postgres", password="kohaku", host="localhost", port="5432")
     c = conn.cursor()
     c.executemany(
         '''insert into Authors (ObjectId, AuthorId, BirthYear, DeathYear, AuthorDesc, AuthorDescTr, Dynasty, DynastyTr, AuthorName, AuthorNameTr, WorksCiCount, WorksShiCount, WorksQuCount, WorksWenCount, WorksFuCount, WorksCount) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''',
@@ -163,7 +165,8 @@ def get_all_author_object_id():
 
 
 def get_author_id_from_db():
-    conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
+    # conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
+    conn = psycopg2.connect(database="postgres", user="postgres", password="kohaku", host="localhost", port="5432")
     c = conn.cursor()
     c.execute("select ObjectId from Authors")
     return c.fetchall()
@@ -196,7 +199,7 @@ def insert_all_works():
 
 if __name__ == '__main__':
     start_time = time.time()
-    pool = mp.Pool(mp.cpu_count())
+    pool = mp.Pool(8)
     result = pool.map(get_works_by_author_id, get_author_id_from_db())
 
     pool.close()
@@ -207,7 +210,8 @@ if __name__ == '__main__':
         for j in i:
             works.append(j)
 
-    conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
+    # conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
+    conn = psycopg2.connect(database="postgres", user="postgres", password="kohaku", host="localhost", port="5432")
     c = conn.cursor()
     c.executemany(
         'insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
@@ -217,3 +221,7 @@ if __name__ == '__main__':
 
     end_time = time.time() - start_time
     print(f"Time took: {end_time}s")
+
+
+
+# insert_authors()
