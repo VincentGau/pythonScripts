@@ -29,8 +29,8 @@ class MonitorTestCase(TestCase):
         self.assertEqual(monitoring.check_site(site), False)
 
     def test_check_site_with_keywords(self):
-        site = {'url': 'https://kohaku.cc',
-                'keywords': ['lalala'],
+        site = {'url': 'https://blog.kohaku.cc',
+                'keywords': ['生命中幻光 不可追逐'],
                 'bad_words': []
                 }
         self.assertEqual(monitoring.check_site(site), True)
