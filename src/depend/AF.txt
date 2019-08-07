@@ -1,0 +1,57 @@
+Algeria 阿尔及利亚
+Angola 安哥拉
+Ascension Island 阿森松岛
+Benin 贝宁
+Botswana 博茨瓦纳
+Burkina Faso 布基纳法索
+Burundi 布隆迪
+Cameroon 喀麦隆
+Cape Verde 佛得角
+Central African Republic 中非
+Chad 乍得
+Comoros 科摩罗
+Cote D'Ivoire 科特迪瓦
+Djibouti 吉布提
+Egypt 埃及
+Equatorial Guinea 赤道几内亚
+Eritrea 厄立特里亚
+Ethiopia 埃塞俄比亚
+Gabon 加蓬
+Gambia 冈比亚
+Ghana 加纳
+Kenya 肯尼亚
+Lesotho 莱索托
+Liberia 利比里亚
+Libya 利比亚
+Madagascar 马达加斯加
+Malawi 马拉维
+Mali 马里
+Mauritania 毛里塔尼亚
+Mauritius 毛里求斯
+Morocco 摩洛哥
+Mozambique 莫桑比克
+Namibia 纳米比亚
+Niger 尼日尔
+Nigeria 尼日利亚
+Reunion 留尼汪岛
+Rwanda 卢旺达
+Saint Helena 圣赫勒拿
+Sao Tome and Principe 圣多美和普林西比
+Senegal 塞内加尔
+Seychelles 塞舌尔
+Sierra Leone 塞拉利昂
+Somalia 索马里
+South Africa 南非
+South Sudan 南苏丹
+Sudan 苏丹
+Swaziland 斯威士兰
+Syrian Arab Republic 叙利亚
+The Democratic Republic Of The Congo 刚果(金)
+The Republic of Congo 刚果
+Togo 多哥
+Tunisia 突尼斯
+Uganda 乌干达
+United Republic of Tanzania 坦桑尼亚
+Western sahara 西撒哈拉
+Zambia 赞比亚
+Zimbabwe 津巴布韦

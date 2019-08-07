@@ -1,0 +1,20 @@
+Argentina 阿根廷
+Bolivia 玻利维亚
+Brazil 巴西
+Caribbean Netherlands 加勒比荷兰
+Chile 智利
+Cocos (Keeling) Islands 科科斯岛
+Colombia 哥伦比亚
+Dominican Republic 多米尼加共和国
+Ecuador 厄瓜多尔
+Falkland Islands (Islas Malvinas) 福克兰群岛
+Guadeloupe 瓜德罗普岛(法)
+Guyana 圭亚那
+Guyane French 法属圭亚那
+Netherlands Antilles 荷属安的列斯群岛
+Paraguay 巴拉圭
+Peru 秘鲁
+Saint Kitts and Nevis 圣克里斯托弗和尼维斯
+Suriname 苏里南
+Uruguay 乌拉圭
+Venezuela 委内瑞拉
