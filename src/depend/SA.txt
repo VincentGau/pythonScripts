@@ -7,7 +7,7 @@ Cocos (Keeling) Islands 科科斯岛
 Colombia 哥伦比亚
 Dominican Republic 多米尼加共和国
 Ecuador 厄瓜多尔
-Falkland Islands (Islas Malvinas) 福克兰群岛
+Falkland Islands (Malvinas) 福克兰群岛
 Guadeloupe 瓜德罗普岛(法)
 Guyana 圭亚那
 Guyane French 法属圭亚那

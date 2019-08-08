@@ -28,13 +28,13 @@ Panama 巴拿马
 Puerto Rico 波多黎各(美)
 Saint Barthelemy 圣巴泰勒米岛
 Saint Lucia 圣卢西亚
-Saint Martin（France） 圣马丁岛
-Saint Pierre and Miquelon 圣皮埃尔岛及密克隆岛
+Saint Martin 圣马丁岛
+St. Pierre and Miquelon 圣皮埃尔岛及密克隆岛
 Saint Vincent and the Grenadines 圣文森特岛(英)
 Territory of Heard Island and McDonald Islands 赫德岛和麦克唐纳群岛
 The Commonwealth of The Bahamas 巴哈马国
 Trinidad and Tobago 特立尼达和多巴哥
 Turks and Caicos Islands 特克斯和凯科斯群岛(英)
-U.S.Virgin Islands 维尔京群岛(美)
+Virgin Islands (U.S.) 维尔京群岛(美)
 United States Minor Outlying Islands 美国本土外小岛屿
 United States 美国

@@ -9,7 +9,7 @@ Belgium 比利时
 Bermuda 百慕大群岛(英)
 Bosnia and Herzegovina 波斯尼亚和黑塞哥维那
 Bulgaria 保加利亚
-Croatia 克罗地亚
+Croatia (local name: Hrvatska) 克罗地亚
 Czech Republic 捷克
 Denmark 丹麦
 Estonia 爱沙尼亚
@@ -38,13 +38,13 @@ Norway 挪威
 Pitcairn Islands 皮特凯恩群岛
 Poland 波兰
 Portugal 葡萄牙
-Republic of Moldova 摩尔多瓦
+Moldova 摩尔多瓦
 Romania 罗马尼亚
 Russian Federation 俄罗斯
 San Marino 圣马力诺
 Serbia 塞尔维亚
 Sint Maarten (Netherlands) 圣马丁(荷)
-Slovakia 斯洛伐克
+Slovakia (Slovak Republic) 斯洛伐克
 Slovenia 斯洛文尼亚
 Spain 西班牙
 Svalbard and Jan Mayen 斯瓦尔巴群岛(挪)
