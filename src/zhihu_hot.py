@@ -1,7 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 import requests
 from bs4 import BeautifulSoup
+from datetime import datetime
+import sys
+
+
+curPath = os.path.abspath(os.path.dirname(__file__))
+rootPath = os.path.split(curPath)[0]
+sys.path.append(rootPath)
 
 from src import local_settings
 
@@ -16,5 +24,10 @@ r = requests.get(url, headers=headers)
 soup = BeautifulSoup(r.content, 'lxml')
 print(soup.title)
 hot_items = soup.findAll('div', attrs={"class": "HotItem-content"})
-for i, item in enumerate(hot_items):
-    print(i, item.contents[0]['href'], item.contents[0]['title'])
+if not os.path.exists('c:/data'):
+    os.makedirs('c:/data')
+today = datetime.now()
+with open(f'c:/data/zhihu-hot-{today.year}-{today.month}-{today.day}.txt', 'w') as f:
+    for i, item in enumerate(hot_items):
+        print(i, item.contents[0]['href'], item.contents[0]['title'])
+        f.write(f"{i+1} {item.contents[0]['href']} {item.contents[0]['title']}\n")
