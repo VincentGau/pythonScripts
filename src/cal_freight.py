@@ -19,7 +19,8 @@ pwd = local_settings.ALIEX_PWD
 class MyClass:
     def __init__(self):
         self.s = requests.session()
-        self.certFile = "depend/123.crt"
+        # self.certFile = "depend/123.crt"
+        self.certFile = None
         self.headers={
             'Accept':'application/json, text/javascript, */*; q=0.01',
             'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36',
@@ -40,7 +41,7 @@ class MyClass:
 
     def get_cookie(self):
         options = webdriver.ChromeOptions()
-        # options.add_argument('headless')
+        options.add_argument('headless')
         driver = webdriver.Chrome('C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe',
                                   chrome_options=options)
 
