@@ -4,16 +4,16 @@
 """
 给win10锁屏壁纸文件夹下的所有文件加上jpg后缀名，并保存；
 """
-
+import logging
 import os
 import shutil
 import getpass
 from PIL import Image
 
 # assets原始地址
-assets_path = r'C:\Users\%s\AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\LocalState\Assets' % getpass.getuser()
+assets_path = r'C:\Users\%s\AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\LocalState\Assets' % 'gmkoh'
 # 临时存放地址
-temp_dir = r'C:\Users\%s\Desktop\AssetsTmp' % getpass.getuser()
+temp_dir = r'C:\Users\%s\Desktop\AssetsTmp' % 'gmkoh'
 # 最终保存图片的地址
 pic_zone = r'C:\Wallpaper'
 # 不保存小于save_size（KB）的图片
@@ -84,8 +84,13 @@ def create_piczone_if_not_exist():
         os.mkdir(pic_zone)
 
 
-create_piczone_if_not_exist()
-copy_to_temp()
-rename()
-filter_by_size()
-del_temp()
+if __name__ == '__main__':
+    if not os.path.exists('c:/HLog'):
+        os.makedirs('c:/HLog')
+    logging.basicConfig(level=logging.INFO, filename='c:/HLog/pyScript.log', filemode='a', format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
+    create_piczone_if_not_exist()
+    copy_to_temp()
+    rename()
+    filter_by_size()
+    del_temp()
+    logging.info('Success saving wallpaper.')

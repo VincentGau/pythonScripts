@@ -130,10 +130,10 @@ class MyClass:
 m = MyClass()
 continents = ['AS', 'AF', 'NA', 'SA', 'EU', 'OA']
 # continents = ['AS']
-weight = 1.2
-length = 29
-width = 19
-height = 18
+weight = 4
+length = 60
+width = 26
+height = 29
 
 with pd.ExcelWriter(f'output/{weight}-{length}-{width}-{height}.xlsx') as writer:
     for c in continents:
