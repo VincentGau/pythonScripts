@@ -87,7 +87,7 @@ def create_piczone_if_not_exist():
 if __name__ == '__main__':
     if not os.path.exists('c:/HLog'):
         os.makedirs('c:/HLog')
-    logging.basicConfig(level=logging.INFO, filename='c:/HLog/pyScript.log', filemode='a', format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
+    logging.basicConfig(level=logging.INFO, filename='c:/HLog/wallpaper.log', filemode='a', format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
     create_piczone_if_not_exist()
     copy_to_temp()
     rename()

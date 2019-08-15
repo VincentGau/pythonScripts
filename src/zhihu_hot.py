@@ -44,5 +44,5 @@ def get_zhihu_hot():
 if __name__ == '__main__':
     if not os.path.exists('c:/HLog'):
         os.makedirs('c:/HLog')
-    logging.basicConfig(level=logging.INFO, filename='c:/HLog/pyScript.log', filemode='a', format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
+    logging.basicConfig(level=logging.INFO, filename='c:/HLog/zhihu_hot.log', filemode='a', format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
     get_zhihu_hot()
