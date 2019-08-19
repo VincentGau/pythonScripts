@@ -1,0 +1,27 @@
+-- postgresql
+create table Works (
+	ObjectId text primary key, 
+	WorkId int, 
+	Annotation text, 
+	AnnotationTr text, 
+	Appreciation text, 
+	AppreciationTr text, 
+	AuthorObjectId text,
+	Content text, 
+	ContentTr text, 
+	Dynasty text, 
+	DynastyTr text, 
+	Foreword text, 
+	ForewordTr text, 
+	Intro text, 
+	IntroTr text, 
+	Kind text, 
+	KindCN text, 
+	KindCNTr text, 
+	Title text, 
+	TitleTr text, 
+	Translation text, 
+	TranslationTr text, 
+	MasterComment text, 
+	MasterCommentTr text
+)

@@ -8,7 +8,7 @@ import pymssql
 import psycopg2
 import multiprocessing as mp
 import time
-import local_settings
+from src import local_settings
 
 
 url_collections = 'https://9pq709je.engine.lncld.net/1.1/call/getAllCollections'
@@ -62,10 +62,16 @@ def get_authors():
 
 
 def insert_authors():
+    """
+
+    将作者信息插入authors表
+
+    :return:
+    """
     authors_info = get_authors()
-    # conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
     conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost", port="5432")
     c = conn.cursor()
+    c.execute('''truncate table Authors CASCADE''')
     c.executemany(
         '''insert into Authors (ObjectId, AuthorId, BirthYear, DeathYear, AuthorDesc, AuthorDescTr, Dynasty, DynastyTr, AuthorName, AuthorNameTr, WorksCiCount, WorksShiCount, WorksQuCount, WorksWenCount, WorksFuCount, WorksCount) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''',
         authors_info)
@@ -151,6 +157,7 @@ def insert_all_works():
 
 
 if __name__ == '__main__':
+    insert_authors()
     print(datetime.datetime.now())
     start_time = time.time()
     pool = mp.Pool(8)
@@ -164,7 +171,6 @@ if __name__ == '__main__':
         for j in i:
             works.append(j)
 
-    # conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
     conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost", port="5432")
     c = conn.cursor()
     c.executemany(
