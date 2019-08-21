@@ -63,7 +63,7 @@ def format_json_file():
         for line in f:
             line = line.replace('},', '}\n')
             line = line.replace(r'\r\n', '')
-            file_data += line
+            file_data += line 
 
     with open(r'output\authors_1.json', 'w', encoding='utf-8') as f:
         f.write(file_data)
