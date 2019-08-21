@@ -11,9 +11,9 @@ import getpass
 from PIL import Image
 
 # assets原始地址
-assets_path = r'C:\Users\%s\AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\LocalState\Assets' % 'gmkoh'
+assets_path = r'C:\Users\%s\AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\LocalState\Assets' % getpass.getuser()
 # 临时存放地址
-temp_dir = r'C:\Users\%s\Desktop\AssetsTmp' % 'gmkoh'
+temp_dir = r'C:\Users\%s\Desktop\AssetsTmp' % getpass.getuser()
 # 最终保存图片的地址
 pic_zone = r'C:\Wallpaper'
 # 不保存小于save_size（KB）的图片
