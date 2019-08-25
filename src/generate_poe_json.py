@@ -28,6 +28,7 @@ def to_json_author():
         jo.append(result)
 
     json_str = json.dumps(jo, ensure_ascii=False)
+    # json_str = json_str.replace('},', '}\n')
     with open(r'output\authors.json', 'w', encoding='utf-8') as f:
         f.write(json_str[1:-1])
 
@@ -36,7 +37,7 @@ def to_json_poe():
     conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost",
                             port="5432")
     cur = conn.cursor()
-    sql_str = '''select works.Dynasty, Content, Title, Translation, MasterComment, authors.AuthorName from works left join Authors on AuthorObjectId = Authors.ObjectId'''
+    sql_str = '''select WorkId, Annotation, Appreciation, Content, Works.Dynasty, Intro, Kind, Title, Translation, MasterComment, authors.AuthorName from works left join Authors on AuthorObjectId = Authors.ObjectId'''
     cur.execute(sql_str)
     data = cur.fetchall()
     cur.close()
@@ -44,12 +45,17 @@ def to_json_poe():
     jo = []
     for row in data:
         result = dict()
-        result['Dynasty'] = row[0]
-        result['Content'] = row[1]
-        result['Title'] = row[2]
-        result['Translation'] = row[3]
-        result['MasterComment'] = row[4]
-        result['AuthorName'] = row[5]
+        result['WorkId'] = row[0]
+        result['Annotation'] = row[1]
+        result['Appreciation'] = row[2]
+        result['Content'] = row[3]
+        result['Dynasty'] = row[4]
+        result['Intro'] = row[5]
+        result['Kind'] = row[6]
+        result['Title'] = row[7]
+        result['Translation'] = row[8]
+        result['MasterComment'] = row[9]
+        result['AuthorName'] = row[10]
         jo.append(result)
 
     json_str = json.dumps(jo, ensure_ascii=False)
@@ -63,7 +69,8 @@ def format_json_file():
         for line in f:
             line = line.replace('},', '}\n')
             line = line.replace(r'\r\n', '')
-            file_data += line 
+            line = line.replace('\r', '')
+            file_data += line
 
     with open(r'output\authors_1.json', 'w', encoding='utf-8') as f:
         f.write(file_data)
