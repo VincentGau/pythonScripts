@@ -67,14 +67,25 @@ def format_json_file():
     file_data = ''
     with open(r'output\authors.json', encoding='utf-8') as f:
         for line in f:
-            line = line.replace('},', '}\n')
+            line = line.replace('}, {"authorid"', '}\n{"authorid"')
             line = line.replace(r'\r\n', '')
-            line = line.replace('\r', '')
             file_data += line
 
     with open(r'output\authors_1.json', 'w', encoding='utf-8') as f:
         f.write(file_data)
 
 
-to_json_author()
-format_json_file()
+def format_json_file_poe():
+    file_data = ''
+    with open(r'output\works.json', encoding='utf-8') as f:
+        for line in f:
+            line = line.replace('}, {"WorkId"', '}\n{"WorkId"')
+            line = line.replace(r'\r\n', '')
+            file_data += line
+
+    with open(r'output\works_1.json', 'w', encoding='utf-8') as f:
+        f.write(file_data)
+
+
+to_json_poe()
+format_json_file_poe()
