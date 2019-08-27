@@ -37,7 +37,7 @@ def to_json_poe():
     conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost",
                             port="5432")
     cur = conn.cursor()
-    sql_str = '''select WorkId, Annotation, Appreciation, Content, Works.Dynasty, Intro, Kind, Title, Translation, MasterComment, authors.AuthorName from works left join Authors on AuthorObjectId = Authors.ObjectId'''
+    sql_str = '''select WorkId, Annotation, Appreciation, Content, Works.Dynasty, Intro, Kind, Title, Translation, MasterComment, authors.AuthorName, authors.AuthorId, authors.ObjectId from works left join Authors on AuthorObjectId = Authors.ObjectId'''
     cur.execute(sql_str)
     data = cur.fetchall()
     cur.close()
@@ -56,10 +56,12 @@ def to_json_poe():
         result['Translation'] = row[8]
         result['MasterComment'] = row[9]
         result['AuthorName'] = row[10]
+        result['AuthorId'] = row[11]
+        result['AuthorObjId'] = row[12]
         jo.append(result)
 
     json_str = json.dumps(jo, ensure_ascii=False)
-    with open(r'output\works.json', 'w', encoding='utf-8') as f:
+    with open(r'output\workss.json', 'w', encoding='utf-8') as f:
         f.write(json_str[1:-1])
 
 
@@ -80,7 +82,7 @@ def format_json_file_poe():
     with open(r'output\works.json', encoding='utf-8') as f:
         for line in f:
             line = line.replace('}, {"WorkId"', '}\n{"WorkId"')
-            line = line.replace(r'\r\n', '')
+            line = line.replace(r'\r\n', r'\\r\\n')
             file_data += line
 
     with open(r'output\works_1.json', 'w', encoding='utf-8') as f:
