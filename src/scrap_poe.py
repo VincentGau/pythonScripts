@@ -53,7 +53,7 @@ def get_authors():
                      author['descTr'], author['dynasty'], author['dynastyTr'], author['name'],
                      author['nameTr'], author['worksCiCount'], author['worksShiCount'],
                      author['worksQuCount'], author['worksWenCount'], author['worksFuCount'],
-                     author['worksCount']))
+                     author['worksCount'], author['baiduWiki'], author['likersCount'], author['hasProcessedWorks']))
         else:
             break
 
@@ -73,23 +73,23 @@ def insert_authors():
     c = conn.cursor()
     c.execute('''truncate table Authors CASCADE''')
     c.executemany(
-        '''insert into Authors (ObjectId, AuthorId, BirthYear, DeathYear, AuthorDesc, AuthorDescTr, Dynasty, DynastyTr, AuthorName, AuthorNameTr, WorksCiCount, WorksShiCount, WorksQuCount, WorksWenCount, WorksFuCount, WorksCount) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''',
+        '''insert into Authors (ObjectId, AuthorId, BirthYear, DeathYear, AuthorDesc, AuthorDescTr, Dynasty, DynastyTr, AuthorName, AuthorNameTr, WorksCiCount, WorksShiCount, WorksQuCount, WorksWenCount, WorksFuCount, WorksCount, BaiduWiki, LikersCount, HasProcessedWorks) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)''',
         authors_info)
     conn.commit()
     conn.close()
 
 
-def insert_works():
-    authors_id = get_all_author_object_id()
-    works_info = []
-    for id in authors_id:
-        works_info += get_works_by_author_id(id)
-    conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
-    c = conn.cursor()
-    c.executemany('insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                  works_info)
-    conn.commit()
-    conn.close()
+# def insert_works():
+#     authors_id = get_all_author_object_id()
+#     works_info = []
+#     for id in authors_id:
+#         works_info += get_works_by_author_id(id)
+#     conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
+#     c = conn.cursor()
+#     c.executemany('insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr, baiduwiki, layout, likescount, listscount, quotescount, viewscount) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+#                   works_info)
+#     conn.commit()
+#     conn.close()
 
 
 def get_works_by_author_id(objectId):
@@ -113,7 +113,8 @@ def get_works_by_author_id(objectId):
                                   work['contentTr'], work['dynasty'], work['dynastyTr'], work['foreword'],
                                   work['forewordTr'], work['intro'], work['introTr'], work['kind'],
                                   work['kindCN'], work['kindCNTr'], work['title'], work['titleTr'], work['translation'],
-                                  work['translationTr'], work['masterComment'], work['masterCommentTr']))
+                                  work['translationTr'], work['masterComment'], work['masterCommentTr'], work['baiduWiki'],
+                                  work['layout'], work['likesCount'], work['listsCount'], work['postsCount'], work['quotesCount'], work['viewsCount']))
         else:
             break
         page_no += 1
@@ -125,11 +126,11 @@ def get_data(url, payload, filename):
         f.write(requests.post(url=url, data=payload, headers=default_headers).content)
 
 
-def get_all_author_object_id():
-    conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
-    c = conn.cursor()
-    c.execute("select ObjectId from Authors")
-    return c.fetchall()
+# def get_all_author_object_id():
+#     conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
+#     c = conn.cursor()
+#     c.execute("select ObjectId from Authors")
+#     return c.fetchall()
 
 
 def get_author_id_from_db():
@@ -140,24 +141,25 @@ def get_author_id_from_db():
     return c.fetchall()
 
 
-def get_all_works():
-    all_works = []
-    for author_id in get_author_id_from_db():
-        all_works += get_works_by_author_id(author_id)
-    return all_works
+# def get_all_works():
+#     all_works = []
+#     for author_id in get_author_id_from_db():
+#         all_works += get_works_by_author_id(author_id)
+#     return all_works
 
 
-def insert_all_works():
-    conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
-    c = conn.cursor()
-    c.executemany('insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                  get_all_works())
-    conn.commit()
-    conn.close()
+# def insert_all_works():
+#     conn = pymssql.connect(host='localhost', database='HakuTest', user='sa', password='sa')
+#     c = conn.cursor()
+#     c.executemany(
+#         'insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr, baiduwiki, layout, likescount, listscount, quotescount, viewscount) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+#                   get_all_works())
+#     conn.commit()
+#     conn.close()
 
 
 if __name__ == '__main__':
-    insert_authors()
+    # insert_authors()
     print(datetime.datetime.now())
     start_time = time.time()
     pool = mp.Pool(8)
@@ -174,7 +176,7 @@ if __name__ == '__main__':
     conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost", port="5432")
     c = conn.cursor()
     c.executemany(
-        'insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+        'insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr, baiduwiki, layout, likescount, listscount, postscount, quotescount, viewscount) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
         works)
     conn.commit()
     conn.close()
