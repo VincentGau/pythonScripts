@@ -37,7 +37,9 @@ def get_authors():
     page_no = 1
     while True:
         payload = {"page": page_no, "perPage": 1000}
-        result_dict = json.loads(requests.post(url=url, data=payload, headers=default_headers).content)
+        resp = requests.post(url=url, data=payload, headers=default_headers)
+
+        result_dict = json.loads(resp.content)
         authors_dict = result_dict['result']['authors']
 
         if authors_dict:
@@ -68,7 +70,7 @@ def insert_authors():
 
     :return:
     """
-    authors_info = get_authors()
+    authors_info = set(get_authors() + get_author_by_dynasty())
     conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost", port="5432")
     c = conn.cursor()
     c.execute('''truncate table Authors CASCADE''')
@@ -157,31 +159,64 @@ def get_author_id_from_db():
 #     conn.commit()
 #     conn.close()
 
+def get_author_by_dynasty():
+    url = 'https://avoscloud.com/1.1/call/getAuthorsIncludeCountByDynasty'
+    authors_info = []
+    dynasty = ["商", "周", "秦", "汉", "三国", "晋", "南北朝", "隋", "唐", "五代", "宋", "金", "元", "明", "清", "现代"]
+    for d in dynasty:
+        page_no = 1
+        while True:
+            payload = {"page": page_no, "perPage": 1000, "dynasty": d}
+            resp = requests.post(url=url, data=payload, headers=default_headers)
+
+            result_dict = json.loads(resp.content)
+            authors_dict = result_dict['result']['authors']
+
+            if authors_dict:
+                for author in authors_dict:
+                    author = defaultdict(lambda: 'DefaultValue', author)
+
+                    # invalid data
+                    if author['authorId'] == 0:
+                        continue
+
+                    authors_info.append(
+                        (author['objectId'], author['authorId'], author['birthYear'], author['deathYear'], author['desc'],
+                         author['descTr'], author['dynasty'], author['dynastyTr'], author['name'],
+                         author['nameTr'], author['worksCiCount'], author['worksShiCount'],
+                         author['worksQuCount'], author['worksWenCount'], author['worksFuCount'],
+                         author['worksCount'], author['baiduWiki'], author['likersCount'], author['hasProcessedWorks']))
+            else:
+                break
+
+            page_no += 1
+    return authors_info
+
 
 if __name__ == '__main__':
-    # insert_authors()
-    print(datetime.datetime.now())
-    start_time = time.time()
-    pool = mp.Pool(8)
-    result = pool.map(get_works_by_author_id, get_author_id_from_db())
-
-    pool.close()
-    pool.join()
-
-    works = []
-    for i in result:
-        for j in i:
-            works.append(j)
-
-    conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost", port="5432")
-    c = conn.cursor()
-    c.executemany(
-        'insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr, baiduwiki, layout, likescount, listscount, postscount, quotescount, viewscount) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-        works)
-    conn.commit()
-    conn.close()
-
-    end_time = time.time() - start_time
-    print(datetime.datetime.now())
-    print(f"Time took: {end_time}s")
+    insert_authors()
+    # print(datetime.datetime.now())
+    # start_time = time.time()
+    # pool = mp.Pool(8)
+    # result = pool.map(get_works_by_author_id, get_author_id_from_db())
+    #
+    # pool.close()
+    # pool.join()
+    #
+    # works = []
+    # for i in result:
+    #     for j in i:
+    #         works.append(j)
+    #
+    # conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost", port="5432")
+    # c = conn.cursor()
+    # c.executemany(
+    #     'insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr, baiduwiki, layout, likescount, listscount, postscount, quotescount, viewscount) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+    #     works)
+    # conn.commit()
+    # conn.close()
+    #
+    # end_time = time.time() - start_time
+    # print(datetime.datetime.now())
+    # print(f"Time took: {end_time}s")
 
