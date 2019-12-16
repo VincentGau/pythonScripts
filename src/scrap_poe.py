@@ -194,29 +194,30 @@ def get_author_by_dynasty():
 
 
 if __name__ == '__main__':
-    insert_authors()
-    # print(datetime.datetime.now())
-    # start_time = time.time()
-    # pool = mp.Pool(8)
-    # result = pool.map(get_works_by_author_id, get_author_id_from_db())
-    #
-    # pool.close()
-    # pool.join()
-    #
-    # works = []
-    # for i in result:
-    #     for j in i:
-    #         works.append(j)
-    #
-    # conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost", port="5432")
-    # c = conn.cursor()
-    # c.executemany(
-    #     'insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr, baiduwiki, layout, likescount, listscount, postscount, quotescount, viewscount) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-    #     works)
-    # conn.commit()
-    # conn.close()
-    #
-    # end_time = time.time() - start_time
-    # print(datetime.datetime.now())
-    # print(f"Time took: {end_time}s")
+    # insert_authors()
+
+    print(datetime.datetime.now())
+    start_time = time.time()
+    pool = mp.Pool(8)
+    result = pool.map(get_works_by_author_id, get_author_id_from_db())
+
+    pool.close()
+    pool.join()
+
+    works = []
+    for i in result:
+        for j in i:
+            works.append(j)
+
+    conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost", port="5432")
+    c = conn.cursor()
+    c.executemany(
+        'insert into Works (ObjectId, WorkId, Annotation, AnnotationTr, Appreciation, AppreciationTr, AuthorObjectId, Content, ContentTr, Dynasty, DynastyTr, Foreword, ForewordTr, Intro, IntroTr, Kind, KindCN, KindCNTr, Title, TitleTr, Translation, TranslationTr, MasterComment, MasterCommentTr, baiduwiki, layout, likescount, listscount, postscount, quotescount, viewscount) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+        works)
+    conn.commit()
+    conn.close()
+
+    end_time = time.time() - start_time
+    print(datetime.datetime.now())
+    print(f"Time took: {end_time}s")
 
