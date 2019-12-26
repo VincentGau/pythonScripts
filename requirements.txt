@@ -1,3 +1,2 @@
-pymssql
 requests>=2.20.0
 psycopg2
