@@ -39,7 +39,7 @@ def get_quotes():
             for quote in quotes_dict:
 
                 quote = defaultdict(lambda: 'DefaultValue', quote)
-
+                
                 try:
                     # 忽略缺少work的元素
                     quotes.append((quote['objectId'], quote['quoteId'], quote['quote'], quote['quoteTr'],
@@ -56,18 +56,18 @@ def get_quotes():
 def insert_quotes():
     """
 
-    将作者信息插入authors表
+    将作者信息插入quote表
 
     :return:
     """
-    authors_info = set(get_quotes())
-    conn = psycopg2.connect(database="postgres", user="postgres", password=local_settings.POSTGRE_PWD, host="localhost",
+    quotes_info = set(get_quotes())
+    conn = psycopg2.connect(database="hakudb", user="haku", password="haku", host="localhost",
                             port="5432")
     c = conn.cursor()
     c.execute('''truncate table quote CASCADE''')
     c.executemany(
         '''insert into quote (objectId, quoteId, quote, quoteTr, authorName, workTitle, workObjectId) values (%s, %s, %s, %s, %s, %s, %s)''',
-        authors_info)
+        quotes_info)
     conn.commit()
     conn.close()
 
