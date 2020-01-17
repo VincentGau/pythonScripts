@@ -39,7 +39,7 @@ def get_collections():
 
             try:
                 collections.append(
-                    (collection['collectionId'], collection['name'], collection['desc'], collection['kindId'],
+                    (collection['objectId'], collection['collectionId'], collection['name'], collection['desc'], collection['kindId'],
                      collection['order'], collection['childOrder'], collection['cover']))
             except:
                 print(collection)
@@ -54,12 +54,12 @@ def insert_collections():
     :return:
     """
     collections_info = set(get_collections())
-    conn = psycopg2.connect(database="hakudb", user="haku", password="haku", host="localhost",
+    conn = psycopg2.connect(database="hakudb", user="haku", password="haku", host="tc.hakucc.com",
                             port="5432")
     c = conn.cursor()
     c.execute('''truncate table collection CASCADE''')
     c.executemany(
-        '''insert into collection (collectionId, name, collectionDesc, kindId, collectionOrder, childOrder, cover) values (%s, %s, %s, %s, %s, %s, %s)''',
+        '''insert into collection (objectId, collectionId, name, collectionDesc, kindId, collectionOrder, childOrder, cover) values (%s, %s, %s, %s, %s, %s, %s, %s)''',
         collections_info)
     conn.commit()
     conn.close()
