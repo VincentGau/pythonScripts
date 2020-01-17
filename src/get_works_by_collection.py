@@ -56,7 +56,7 @@ def insert_collection_work():
 
     :return:
     """
-    works_info = set(get_works_by_collection('57ea81d30bd1d0005b1a8fb2', '2'))
+    works_info = set(get_all_connections())
     conn = psycopg2.connect(database="hakudb", user="haku", password="haku", host="localhost",
                             port="5432")
     c = conn.cursor()
@@ -67,5 +67,24 @@ def insert_collection_work():
     conn.commit()
     conn.close()
 
+
+def get_collections():
+    """
+    从数据库获取分类数据
+    :return:
+    """
+    conn = psycopg2.connect(database="hakudb", user="haku", password="haku", host="localhost",
+                            port="5432")
+    c = conn.cursor()
+    c.execute("select ObjectId, collectionid from collection")
+    return c.fetchall()
+
+
+def get_all_connections():
+    result = []
+    for a, b in get_collections():
+        print(a, b)
+        result.append(get_works_by_collection(a, b))
+    return result
 
 insert_collection_work()
