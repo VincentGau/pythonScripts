@@ -54,7 +54,7 @@ def insert_collections():
     :return:
     """
     collections_info = set(get_collections())
-    conn = psycopg2.connect(database="hakudb", user="haku", password="haku", host="tc.hakucc.com",
+    conn = psycopg2.connect(database="hakudb", user="haku", password="haku", host="localhost",
                             port="5432")
     c = conn.cursor()
     c.execute('''truncate table collection CASCADE''')
