@@ -43,7 +43,7 @@ def get_quotes():
                 try:
                     # 忽略缺少work的元素
                     quotes.append((quote['objectId'], quote['quoteId'], quote['quote'], quote['quoteTr'],
-                                   quote['authorName'], quote['work']['title'], quote['work']['objectId']))
+                                   quote['authorName'], quote['work']['title'], quote['work']['objectId'], quote['work']['workId']))
                 except:
                     print(quote)
         else:
@@ -66,7 +66,7 @@ def insert_quotes():
     c = conn.cursor()
     c.execute('''truncate table quote CASCADE''')
     c.executemany(
-        '''insert into quote (objectId, quoteId, quote, quoteTr, authorName, workTitle, workObjectId) values (%s, %s, %s, %s, %s, %s, %s)''',
+        '''insert into quote (objectId, quoteId, quote, quoteTr, authorName, workTitle, workObjectId, workId) values (%s, %s, %s, %s, %s, %s, %s, %s)''',
         quotes_info)
     conn.commit()
     conn.close()
