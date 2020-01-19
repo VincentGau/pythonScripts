@@ -84,7 +84,7 @@ def get_all_connections():
     result = []
     for a, b in get_collections():
         print(a, b)
-        result.append(get_works_by_collection(a, b))
+        result += get_works_by_collection(a, b)
     return result
 
 insert_collection_work()
